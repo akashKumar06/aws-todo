@@ -3,9 +3,12 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import Todo from "./todo.model.js";
+import path from "path";
 
 const app = express();
 const server = http.createServer(app);
+
+const __dirname = path.resolve();
 
 mongoose
   .connect(`${process.env.MONGO_URL}/todoDB`)
@@ -27,6 +30,14 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
+  });
+}
 
 app.get("/api/todos", async (req, res) => {
   try {

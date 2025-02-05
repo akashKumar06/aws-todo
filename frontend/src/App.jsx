@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+const BASE_URL =
+  import.meta.env.MODE === "development" ? "http://localhost:8000" : "/";
+
 function App() {
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState("");
@@ -24,7 +27,7 @@ function App() {
 
     try {
       setIsAdding(true);
-      const res = await fetch("http://localhost:8000/api/todo", {
+      const res = await fetch(`${BASE_URL}/api/todo`, {
         method: "POST",
         body: JSON.stringify(newTodo),
         headers: {
@@ -45,7 +48,7 @@ function App() {
   const removeTodo = async (id) => {
     try {
       setIsDeleting(true);
-      const res = await fetch(`http://localhost:8000/api/todo/${id}`, {
+      const res = await fetch(`${BASE_URL}/api/todo/${id}`, {
         method: "DELETE",
       });
       await res.json();
@@ -65,7 +68,7 @@ function App() {
   useEffect(() => {
     async function fetchTodos() {
       try {
-        const res = await fetch("http://localhost:8000/api/todos", {
+        const res = await fetch(`${BASE_URL}/api/todos`, {
           method: "GET",
           credentials: "include",
         });
